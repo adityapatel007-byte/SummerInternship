@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="toggle-controls">
+        <label class="switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider theme"></span>
+        </label>
+        <span id="themeLabel">🌞</span>
+    </div>
+
+    <div class="container">
+        <h1>Weather Dashboard</h1>
+
+        <form method="POST">
+            <input type="text" name="city" placeholder="Enter city name" required />
+            <input type="submit" value="Get Forecast" />
+        </form>
+
+        {% if forecast %}
+        <div class="forecast">
+            <h2>3-Day Forecast for {{ city }}</h2>
+            <div class="forecast-grid">
+                {% for day in forecast %}
+                <div class="forecast-day">
+                    <p><strong>{{ day.date }}</strong></p>
+                    <img src="{{ day.icon }}" alt="{{ day.condition }} icon">
+                    <p>{{ day.temp }}°C</p>
+                    <p>{{ day.condition }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% elif city %}
+        <p style="color: red;">Could not fetch forecast for "{{ city }}".</p>
+        {% endif %}
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeLabel = document.getElementById('themeLabel');
+
+        themeToggle?.addEventListener('change', () => {
+            document.body.classList.toggle('dark');
+            themeLabel.innerText = document.body.classList.contains('dark') ? '🌙' : '🌞';
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Stock Portfolio Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Real-Time Stock Tracker</h1>
+        <p>Enter a stock ticker symbol to get the latest quote.</p>
+
+        <form method="POST">
+            <input type="text" name="ticker" placeholder="e.g., AAPL, MSFT" required />
+            <input type="submit" value="Get Quote" />
+        </form>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-error">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if stock_data %}
+        <div class="stock-card">
+            <h2>{{ stock_data.symbol }}</h2>
+            <p class="price">${{ '%.2f'|format(stock_data.price|float) }}</p>
+            <div class="details">
+                <p>Change: <span class="{{ 'positive' if stock_data.change|float > 0 else 'negative' }}">${{ '%.2f'|format(stock_data.change|float) }}</span></p>
+                <p>Change %: <span class="{{ 'positive' if stock_data.change|float > 0 else 'negative' }}">{{ '%.2f'|format(stock_data.change_percent.replace('%', '')|float) }}%</span></p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
